@@ -17,6 +17,7 @@ from morl_baselines.multi_policy.gpi_pd.gpi_pd_continuous_action import (
 )
 from morl_baselines.multi_policy.ipro.ipro import IPRO
 from morl_baselines.multi_policy.ipro.ipro_2d import IPRO2D
+from morl_baselines.multi_policy.lcn.lcn import LCN
 from morl_baselines.multi_policy.linear_support.linear_support import LinearSupport
 from morl_baselines.multi_policy.multi_policy_moqlearning.mp_mo_q_learning import (
     MPMOQLearning,
@@ -287,6 +288,33 @@ def test_pcn():
     assert scalarized_disc_return != 0
     assert len(vec_ret) == 3
     assert len(vec_disc_ret) == 3
+
+
+def test_lcn():
+    env = mo_gym.make("fruit-tree-v0")
+
+    agent = LCN(
+        env,
+        scaling_factor=np.array([1, 1, 1, 1, 1, 1, 0.1]),
+        learning_rate=1e-2,
+        batch_size=32,
+        log=False,
+    )
+
+    agent.train(
+        total_timesteps=20,
+        ref_point=np.zeros(6),
+        num_er_episodes=2,
+        max_buffer_size=50,
+        num_model_updates=10,
+        max_return=np.full(6, 10.0, dtype=np.float32),
+        eval_env=env,
+    )
+
+    agent.set_desired_return_and_horizon(np.full(6, 5.0, dtype=np.float32), 6)
+    scalar_return, scalarized_disc_return, vec_ret, vec_disc_ret = eval_mo(agent, env=env, w=np.full(6, 1 / 6), render=False)
+    assert len(vec_ret) == 6
+    assert len(vec_disc_ret) == 6
 
 
 def test_capql():

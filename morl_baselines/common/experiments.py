@@ -13,6 +13,7 @@ from morl_baselines.multi_policy.gpi_pd.gpi_pd_continuous_action import (
     GPILSContinuousAction,
     GPIPDContinuousAction,
 )
+from morl_baselines.multi_policy.lcn.lcn import LCN
 from morl_baselines.multi_policy.morld.morld import MORLD
 from morl_baselines.multi_policy.multi_policy_moqlearning.mp_mo_q_learning import (
     MPMOQLearning,
@@ -34,6 +35,7 @@ ALGOS = {
     "capql": CAPQL,
     "mpmoql": MPMOQLearning,
     "pcn": PCN,
+    "lcn": LCN,
     "pql": PQL,
     "ols": MPMOQLearning,
     "gpi-ls": MPMOQLearning,
